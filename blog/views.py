@@ -9,6 +9,8 @@ from .models import Image,Profile,Comments,Preference
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 
+def is_users(image_user, logged_user):
+    return image_user == logged_user
 
 class CreateDetail(LoginRequiredMixin,CreateView):
     model = Image
@@ -150,6 +152,14 @@ class ImageDetail(DetailView):
 
         return self.get(self, request, *args, **kwargs)
 
+class ImageDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Image
+    template_name = 'blog/image-delete.html'
+    context_object_name = 'image'
+    success_url = '/'
+
+    def test_func(self):
+        return is_users(self.get_object().username, self.request.user)
 
 @login_required
 def imagepreference(request, imageid, userpreference):
@@ -179,7 +189,7 @@ def imagepreference(request, imageid, userpreference):
                                 eachpost.save()
                                 context= {'eachpost': eachpost,
                                   'imageid': imageid}
-                                return redirect('blog-home')
+                                return redirect('image-detail')
                         elif valueobj == userpreference:
                                 obj.delete()
                                 if userpreference == 1:
@@ -189,7 +199,7 @@ def imagepreference(request, imageid, userpreference):
                                 eachpost.save()
                                 context= {'eachpost': eachpost,
                                   'imageid': imageid}
-                                return redirect('blog-home')
+                                return redirect('image-detail')
                                 
                 except Preference.DoesNotExist:
                         upref= Preference()
@@ -214,4 +224,4 @@ def imagepreference(request, imageid, userpreference):
                 context= {'eachpost': eachpost,
                           'imageid': imageid}
 
-                return redirect('blog-home')
+                return redirect('image-detail')
