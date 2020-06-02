@@ -22,8 +22,12 @@
   </div><br><br>
   {% endif %} 
   {%if image.caption %}
+  <small>
+  {{ image.date_posted | date:"M d,Y " }}
+</small>
   <p>  {{image.caption}}</p>
   {%endif%}
+ 
   {% if image.image%}
     <img src="{{image.image.url}}" alt="" srcset="" style="height: 400px; width: 400px;">
  
