@@ -7,7 +7,7 @@ from django.contrib.auth import views as auth_views
 from .models import Image
 from django.urls import path
 urlpatterns = [ 
-    
+     path('image/<int:imageid>/preference/<int:userpreference>', views.imagepreference, name='imagepreference'),
     path('', ImageView.as_view(), name = 'blog-home'),
     path('image/<int:pk>/', ImageDetail.as_view(), name = 'image-detail'),
     path('image/<int:pk>/comment', CreateComment.as_view(), name = 'comment-detail'),
