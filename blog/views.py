@@ -1,11 +1,11 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse,Http404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import registrationForm,UpdateUser,UpdateProfile,CommentForm
 from django.contrib.auth.models import User
-from .models import Image,Profile,Comments
+from .models import Image,Profile,Comments,Preference
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 
@@ -68,7 +68,7 @@ def register(request):
            form.save()
            username = form.cleaned_data.get('username')
            messages.success(request,f'Account created for {username}')
-           return redirect('blog-home')
+           return redirect('blog-login')
 
     else:
        form = registrationForm()
@@ -150,3 +150,68 @@ class ImageDetail(DetailView):
 
         return self.get(self, request, *args, **kwargs)
 
+
+@login_required
+def imagepreference(request, imageid, userpreference):
+
+        if request.method == "POST":
+                eachpost= get_object_or_404(Image, id=imageid)
+                obj=''
+                valueobj=''
+                try:
+                        obj= Preference.objects.get(user= request.user, image= eachpost)
+                        valueobj= obj.value 
+                        valueobj= int(valueobj)
+                        userpreference= int(userpreference)
+                        if valueobj != userpreference:
+                                obj.delete()
+                                upref= Preference()
+                                upref.user= request.user
+                                upref.image= eachpost
+                                upref.value= userpreference
+                                if userpreference == 1 and valueobj != 1:
+                                        eachpost.likes += 1
+                                        eachpost.dislikes -=1
+                                elif userpreference == 2 and valueobj != 2:
+                                        eachpost.dislikes += 1
+                                        eachpost.likes -= 1
+                                upref.save()
+                                eachpost.save()
+                                context= {'eachpost': eachpost,
+                                  'imageid': imageid}
+                                return redirect('blog-home')
+                        elif valueobj == userpreference:
+                                obj.delete()
+                                if userpreference == 1:
+                                        eachpost.likes -= 1
+                                elif userpreference == 2:
+                                        eachpost.dislikes -= 1
+                                eachpost.save()
+                                context= {'eachpost': eachpost,
+                                  'imageid': imageid}
+                                return redirect('blog-home')
+                                
+                except Preference.DoesNotExist:
+                        upref= Preference()
+                        upref.user= request.user
+                        upref.post= eachpost
+                        upref.value= userpreference
+                        userpreference= int(userpreference)
+                        if userpreference == 1:
+                                eachpost.likes += 1
+                        elif userpreference == 2:
+                                eachpost.dislikes +=1
+                        upref.save()
+                        eachpost.save()                            
+
+                        context= {'post': eachpost,
+                          'imageid': imageid}
+
+                        return redirect('blog-home')
+
+        else:
+                eachpost= get_object_or_404(Image, id=imageid)
+                context= {'eachpost': eachpost,
+                          'imageid': imageid}
+
+                return redirect('blog-home')
