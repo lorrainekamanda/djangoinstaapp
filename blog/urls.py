@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from . import views
-from .views import ImageView,ImageDetail,CreateDetail,UpdateDetail,CreateComment,CommentView
+from .views import ImageView,ImageDetail,CreateDetail,UpdateDetail,CreateComment,CommentView,ImageDelete
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
@@ -12,6 +12,7 @@ urlpatterns = [
     path('image/<int:pk>/', ImageDetail.as_view(), name = 'image-detail'),
     path('image/<int:pk>/comment', CreateComment.as_view(), name = 'comment-detail'),
     path('image/<int:pk>/update', UpdateDetail.as_view(), name = 'image-update'),
+    path('image/<int:pk>/delete',ImageDelete.as_view(), name = 'image-delete'),
     path('image/new/', CreateDetail.as_view(), name = 'image-create'),
     path('register/', views.register, name = 'blog-register'),
     path('profile/', views.profile, name = 'blog-profile'),
