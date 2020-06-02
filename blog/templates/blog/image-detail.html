@@ -29,10 +29,10 @@
         <img src="{{image.image.url}}" alt="" srcset="" style="height: 400px; width: 400px;">
 
         {% endif%}
-
+        {% if image.username == user %}
         <i class="fas fa-pen-fancy" style="margin-left: 200px; margin-top: -100px;">  <a href="{% url 'image-update' image.id %} "> Edit</a> </i>    
         <i class="fas fa-trash-alt"> <a href="{% url 'image-delete' image.id %} "> Clear</a>  </i>   
-       
+       {%endif%}
 
     </div>
     <i style=" font-size: 16px;" class="far fa-comment">   {{ image.number_of_comments }} comments  </i>

@@ -45,7 +45,7 @@ class Image(models.Model):
 
     @classmethod
     def search_by_username(cls,search_term):
-        uses = cls.objects.filter(username__user__icontains=search_term)
+        uses = cls.objects.filter(username__username__icontains=search_term)
         return uses
 
     def get_image_by_id(id):
