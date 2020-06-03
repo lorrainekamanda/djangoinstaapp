@@ -2,7 +2,7 @@
   ### HELLO WELCOME! <br/>
   Name : Lorraine Kamanda <br/>
  Email:lorrainekamanda@gmail.com <br/>
- Website link: [ INSTA CLONE ](https://scrampdjango.herokuapp.com/) The app was deployed using Heroku platform<br/>
+ Website link: [ INSTA CLONE ](https://djangothen.herokuapp.com/) The app was deployed using Heroku platform<br/>
  The Insta Clone is a clone of instagram where users will get the featutes available on Instagram <br>
 
 ## **Team;**<br/>
